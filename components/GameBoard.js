@@ -20,7 +20,7 @@ const diceReducer = (state, action) => {
 };
 
 export default function GameBoard() {
-	const WINNING_SCORE = 50;
+	const WINNING_SCORE = 100;
 	const { playerOne, playerTwo } = useContext(Context);
 	const leftDice = useRef();
 	const rightDice = useRef();
