@@ -74,15 +74,12 @@ export default function GameBoard() {
 
 	const gameLogic = () => {
 		if (noOnesOrDoubles() == true) {
-			console.log('no ones or doubles');
 			setTurnScore(prevScore => prevScore + leftDieValue + rightDieValue);
 			setShowHoldOrContinue(true);
 		} else if (checkForValidDoubles() == true) {
-			console.log('check for valid doubles');
 			setTurnScore(prevScore => prevScore + leftDieValue + rightDieValue);
 			setShowHoldOrContinue(false);
 		} else {
-			console.log('ones rolled');
 			onesRolled();
 		}
 		diceDispatch({ type: 'clearDice' });
