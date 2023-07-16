@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import { Context } from '/Context';
 
 export default function PlayerCreation() {
-	const { setGameStarted, playerOne, setPlayerOne, playerTwo, setPlayerTwo } =
+	const { setGameStarted, playerOne, setPlayerOne, playerTwo, setPlayerTwo, finalSCore, setFinalScore } =
 		useContext(Context);
 
 	const startGame = () => {
@@ -37,6 +37,13 @@ export default function PlayerCreation() {
 						onChange={e => setPlayerTwo(e.target.value.trim())}
 					>
 						Enter Player One Name
+					</TextField>
+					<TextField
+						label='Final Score'
+						value={finalSCore}
+						onChange={e => setFinalScore(e.target.value)}
+					>
+						Set Final Score
 					</TextField>
 				</div>
 				<div className='w-full flex'>

@@ -6,6 +6,7 @@ function ContextProvider({ children }) {
 	const [gameStarted, setGameStarted] = useState(false);
 	const [playerOne, setPlayerOne] = useState('');
 	const [playerTwo, setPlayerTwo] = useState('');
+	const [finalScore, setFinalScore] = useState(20)
 
 	return (
 		<Context.Provider
@@ -17,6 +18,8 @@ function ContextProvider({ children }) {
 				setPlayerOne,
 				playerTwo,
 				setPlayerTwo,
+				finalScore,
+				setFinalScore
 			}}
 		>
 			{children}

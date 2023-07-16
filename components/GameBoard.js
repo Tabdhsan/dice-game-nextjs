@@ -1,5 +1,5 @@
 import HoldOrContinue from '/components/HoldOrContinue';
-import { Alert, Paper, Snackbar } from '@mui/material';
+import { Alert, Paper, Snackbar, Typography } from '@mui/material';
 import { useRef, useState, useEffect, useReducer, useContext } from 'react';
 import Dice from 'react-dice-roll';
 import { Context } from '/Context';
@@ -20,8 +20,8 @@ const diceReducer = (state, action) => {
 };
 
 export default function GameBoard() {
-	const WINNING_SCORE = 100;
-	const { playerOne, playerTwo } = useContext(Context);
+	const WINNING_SCORE = 20;
+	const { playerOne, playerTwo, finalScore } = useContext(Context);
 	const leftDice = useRef();
 	const rightDice = useRef();
 
@@ -42,6 +42,8 @@ export default function GameBoard() {
 	const [activeUser, setActiveUser] = useState(playerOne);
 	const [oneRolled, setOneRolled] = useState(false);
 	const [winner, setWinner] = useState(false);
+	const [isFirstTurn, setIsFirstTurn] = useState(true)
+	const [turnTextToShow, setTurnTextToShow] = useState('Click Roll Dice to Start Game')
 
 	const noOnesOrDoubles = () => {
 		return (
@@ -66,6 +68,8 @@ export default function GameBoard() {
 		setOneRolled(true);
 	};
 
+	const notActiveUser = playerOne == activeUser ? playerTwo : playerOne;
+
 	useEffect(() => {
 		if (oneRolled) {
 			endTurn();
@@ -73,6 +77,21 @@ export default function GameBoard() {
 	}, [oneRolled]);
 
 	const gameLogic = () => {
+
+		if (leftDieValue == 1 && rightDieValue == 1) {
+			setTurnTextToShow(`OH NO!!! ${activeUser} Rolled Snake Eyes! ${activeUser} Loses All Their Points!`)
+		} else if
+			(leftDieValue == 1 || rightDieValue == 1) {
+			setTurnTextToShow(`Oh No! ${activeUser} Rolled a One! ${notActiveUser}'s Turn to Roll!`)
+
+		} else if (leftDieValue == rightDieValue) {
+
+			setTurnTextToShow(`${activeUser} Rolled Doubles! Roll Again!`)
+		} else {
+
+			setTurnTextToShow('Hold or Continue?')
+		}
+
 		if (noOnesOrDoubles() == true) {
 			setTurnScore(prevScore => prevScore + leftDieValue + rightDieValue);
 			setShowHoldOrContinue(true);
@@ -86,10 +105,14 @@ export default function GameBoard() {
 	};
 
 	const takeTurn = () => {
+		if (isFirstTurn) {
+			setIsFirstTurn(false)
+		}
 		setTurnActive(true);
 		leftDice.current?.rollDice();
 		rightDice.current?.rollDice();
 	};
+
 
 	useEffect(() => {
 		if (rightDieValue != 0) {
@@ -97,11 +120,18 @@ export default function GameBoard() {
 		}
 	}, [rightDieValue]);
 
+	const holdFunc = () => {
+		setTurnTextToShow(`${activeUser} Chose to Hold. ${notActiveUser}'s Turn!`)
+		endTurn();
+	}
+
+
+
 	const endTurn = () => {
 		if (
-			(playerTwoTotalScore + turnScore >= WINNING_SCORE &&
+			(playerTwoTotalScore + turnScore >= finalScore &&
 				activeUser == playerTwo) ||
-			(playerOneTotalScore + turnScore >= WINNING_SCORE &&
+			(playerOneTotalScore + turnScore >= finalScore &&
 				activeUser == playerOne)
 		) {
 			setWinner(activeUser);
@@ -126,10 +156,10 @@ export default function GameBoard() {
 		setOneRolled(false);
 	};
 	return !winner ? (
-		<Paper elevation={3} className='p-10'>
-			<p className='text-3xl py-5 px-10 font-bold'>Pig Dice Game</p>
+		<Paper elevation={3} className='w-1/2 min-1/2 h-3/5 p-10'>
+			<p className='text-3xl py-5 px-10 font-bold text-center'>Dice Game</p>
 			<p className='text-center text-2xl px-10 py-3 '>{`${activeUser}'s Turn`}</p>
-			<p className='text-center pb-10'>{`Your Turn Score So Far is ${turnScore}`}</p>
+			<p className='text-center pb-10'>{`${activeUser} Turn Score So Far is ${turnScore}`}</p>
 
 			<div className='flex'>
 				<div className='flex space-x-10 mx-auto'>
@@ -160,23 +190,26 @@ export default function GameBoard() {
 				</div>
 			</div>
 			<div className='text-center'>
-				<div>
-					{!showHoldOrContinue ? (
-						<button
-							className='text-center bg-blue-400 rounded-xl p-2 m-5 mt-7'
-							onClick={takeTurn}
-						>
-							{turnActive ? `ROLL AGAIN` : 'ROLL DICE'}
-						</button>
-					) : (
-						<HoldOrContinue
-							holdFunc={() => endTurn()}
-							continueFunc={() => takeTurn()}
-						/>
-					)}
+				<div className='h-24 flex items-center justify-center'>
+					<Typography className='text-xl my-auto break-normal'>{turnTextToShow}</Typography>
 				</div>
-				<p>{`${playerOne} Total Score: ${playerOneTotalScore}`}</p>
-				<p>{`${playerTwo} Total Score: ${playerTwoTotalScore}`}</p>
+				{!showHoldOrContinue ? (
+					<button
+						className='text-center bg-blue-400 rounded-xl p-2'
+						onClick={takeTurn}
+					>
+						{turnActive ? `ROLL AGAIN` : 'ROLL DICE'}
+					</button>
+				) : (
+					<HoldOrContinue
+						holdFunc={holdFunc}
+						continueFunc={() => takeTurn()}
+					/>
+				)}
+				<div className='mt-8'>
+					<p className='text-2xl'>{`${playerOne} Total Score: ${playerOneTotalScore}`}</p>
+					<p className='text-2xl'>{`${playerTwo} Total Score: ${playerTwoTotalScore}`}</p>
+				</div>
 			</div>
 		</Paper>
 	) : (
