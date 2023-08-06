@@ -42,8 +42,10 @@ export default function GameBoard() {
 	const [activeUser, setActiveUser] = useState(playerOne);
 	const [oneRolled, setOneRolled] = useState(false);
 	const [winner, setWinner] = useState(false);
-	const [isFirstTurn, setIsFirstTurn] = useState(true)
-	const [turnTextToShow, setTurnTextToShow] = useState('Click Roll Dice to Start Game')
+	const [isFirstTurn, setIsFirstTurn] = useState(true);
+	const [turnTextToShow, setTurnTextToShow] = useState(
+		'Click Roll Dice to Start Game'
+	);
 
 	const noOnesOrDoubles = () => {
 		return (
@@ -77,19 +79,18 @@ export default function GameBoard() {
 	}, [oneRolled]);
 
 	const gameLogic = () => {
-
 		if (leftDieValue == 1 && rightDieValue == 1) {
-			setTurnTextToShow(`OH NO!!! ${activeUser} Rolled Snake Eyes! ${activeUser} Loses All Their Points!`)
-		} else if
-			(leftDieValue == 1 || rightDieValue == 1) {
-			setTurnTextToShow(`Oh No! ${activeUser} Rolled a One! ${notActiveUser}'s Turn to Roll!`)
-
+			setTurnTextToShow(
+				`OH NO!!! ${activeUser} Rolled Snake Eyes! ${activeUser} Loses All Their Points!`
+			);
+		} else if (leftDieValue == 1 || rightDieValue == 1) {
+			setTurnTextToShow(
+				`Oh No! ${activeUser} Rolled a One! ${notActiveUser}'s Turn to Roll!`
+			);
 		} else if (leftDieValue == rightDieValue) {
-
-			setTurnTextToShow(`${activeUser} Rolled Doubles! Roll Again!`)
+			setTurnTextToShow(`${activeUser} Rolled Doubles! Roll Again!`);
 		} else {
-
-			setTurnTextToShow('Hold or Continue?')
+			setTurnTextToShow('Hold or Continue?');
 		}
 
 		if (noOnesOrDoubles() == true) {
@@ -106,13 +107,12 @@ export default function GameBoard() {
 
 	const takeTurn = () => {
 		if (isFirstTurn) {
-			setIsFirstTurn(false)
+			setIsFirstTurn(false);
 		}
 		setTurnActive(true);
 		leftDice.current?.rollDice();
 		rightDice.current?.rollDice();
 	};
-
 
 	useEffect(() => {
 		if (rightDieValue != 0) {
@@ -121,11 +121,11 @@ export default function GameBoard() {
 	}, [rightDieValue]);
 
 	const holdFunc = () => {
-		setTurnTextToShow(`${activeUser} Chose to Hold. ${notActiveUser}'s Turn!`)
+		setTurnTextToShow(
+			`${activeUser} Chose to Hold. ${notActiveUser}'s Turn!`
+		);
 		endTurn();
-	}
-
-
+	};
 
 	const endTurn = () => {
 		if (
@@ -157,7 +157,9 @@ export default function GameBoard() {
 	};
 	return !winner ? (
 		<Paper elevation={3} className='w-1/2 min-1/2 h-3/5 p-10'>
-			<p className='text-3xl py-5 px-10 font-bold text-center'>Dice Game</p>
+			<p className='py-5 px-10 text-6xl font-bold text-center font-funFont text-red-400'>
+				Dice Game
+			</p>
 			<p className='text-center text-2xl px-10 py-3 '>{`${activeUser}'s Turn`}</p>
 			<p className='text-center pb-10'>{`${activeUser} Turn Score So Far is ${turnScore}`}</p>
 
@@ -191,7 +193,9 @@ export default function GameBoard() {
 			</div>
 			<div className='text-center'>
 				<div className='h-24 flex items-center justify-center'>
-					<Typography className='text-xl my-auto break-normal'>{turnTextToShow}</Typography>
+					<Typography className='text-xl my-auto break-normal'>
+						{turnTextToShow}
+					</Typography>
 				</div>
 				{!showHoldOrContinue ? (
 					<button
