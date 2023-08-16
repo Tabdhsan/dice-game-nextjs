@@ -6,7 +6,7 @@ function ContextProvider({ children }) {
 	const [gameStarted, setGameStarted] = useState(false);
 	const [playerOne, setPlayerOne] = useState('');
 	const [playerTwo, setPlayerTwo] = useState('');
-	const [finalScore, setFinalScore] = useState(20)
+	const [finalScore, setFinalScore] = useState(0);
 
 	return (
 		<Context.Provider
@@ -19,7 +19,7 @@ function ContextProvider({ children }) {
 				playerTwo,
 				setPlayerTwo,
 				finalScore,
-				setFinalScore
+				setFinalScore,
 			}}
 		>
 			{children}
