@@ -16,12 +16,16 @@ export default function Home() {
 	return (
 		<div className='grid place-items-center h-screen bg-red-400'>
 			<Head>
-				<title>Dice Game</title>
+				<title>Dice Dash: Point Pursuit</title>
 			</Head>
-			<Paper elevation={4} className='p-10 font'>
+			<Paper
+				elevation={4}
+				className='p-10 font'
+				sx={{ borderRadius: '1rem' }}
+			>
 				<div className='space-y-6'>
 					<h1 className='text-6xl font-bold text-center font-funFont text-red-400'>
-						Dice Game
+						Dice Dash: Point Pursuit
 					</h1>
 					<p>
 						<strong>Gameplay</strong>

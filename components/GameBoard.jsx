@@ -185,9 +185,9 @@ export default function GameBoard() {
 		setOneRolled(false);
 	};
 	return !winner ? (
-		<Paper elevation={3} className='w-1/2 min-1/2 h-3/5 p-10'>
+		<Paper elevation={3} className='w-1/2 min-1/2 h-auto p-10' sx={{ borderRadius: '1rem' }} >
 			<p className='py-5 px-10 text-6xl font-bold text-center font-funFont text-red-400'>
-				Dice Game
+				Dice Dash: Point Pursuit
 			</p>
 			<p className='text-center text-2xl px-10 py-3 '>{`${activeUser}'s Turn`}</p>
 			<p className='text-center pb-10'>{`${activeUser} Turn Score So Far is ${turnScore}`}</p>
