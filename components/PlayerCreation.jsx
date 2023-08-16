@@ -2,13 +2,20 @@
 import { TextField, Paper } from '@mui/material';
 import { useContext, useState } from 'react';
 import { Context } from '/Context';
+import selectSound from '../public/sounds/select.mp3';
+import useSound from 'use-sound';
 
 export default function PlayerCreation() {
 	const { setGameStarted, playerOne, setPlayerOne, playerTwo, setPlayerTwo, finalSCore, setFinalScore } =
 		useContext(Context);
 
+	const [play] = useSound(selectSound);
+
+
 	const startGame = () => {
-		playerOne && playerTwo && setGameStarted(true);
+		if (!playerOne || !playerTwo) return
+		play()
+		setGameStarted(true);
 	};
 
 	return (
