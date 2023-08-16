@@ -1,19 +1,31 @@
 import { Paper } from '@mui/material';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import useSound from 'use-sound';
+import selectSound from '../public/sounds/select.mp3';
 
 export default function Home() {
 	const router = useRouter();
+	const [play] = useSound(selectSound);
+
+	const handleClick = () => {
+		play();
+		router.push('/Game');
+	};
 
 	return (
 		<div className='grid place-items-center h-screen bg-red-400'>
 			<Head>
-				<title>Dice Game</title>
+				<title>Dice Dash: Point Pursuit</title>
 			</Head>
-			<Paper elevation={4} className='p-10 font'>
+			<Paper
+				elevation={4}
+				className='p-10 font'
+				sx={{ borderRadius: '1rem' }}
+			>
 				<div className='space-y-6'>
 					<h1 className='text-6xl font-bold text-center font-funFont text-red-400'>
-						Dice Game
+						Dice Dash: Point Pursuit
 					</h1>
 					<p>
 						<strong>Gameplay</strong>
@@ -46,7 +58,7 @@ export default function Home() {
 					<div className='w-100 text-center'>
 						<button
 							className='text-3xl shadow-3xl bg-gray-300 hover:bg-gray-400 p-3 rounded-2xl mx-auto'
-							onClick={() => router.push('/Game')}
+							onClick={handleClick}
 						>
 							Click Here To Play!
 						</button>

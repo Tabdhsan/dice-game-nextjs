@@ -1,9 +1,16 @@
 import HoldOrContinue from '/components/HoldOrContinue';
-import { Alert, Paper, Snackbar, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import { useRef, useState, useEffect, useReducer, useContext } from 'react';
 import Dice from 'react-dice-roll';
 import { Context } from '/Context';
 import EndGame from './EndGame';
+import diceRollSound from '../public/sounds/dice-roll.mp3';
+import doublesSound from '../public/sounds/excited.mp3'
+import holdSound from '../public/sounds/select.mp3'
+import snakeEyesSound from '../public/sounds/sad.mp3'
+import victorySound from '../public/sounds/victory.mp3'
+import singleOneRolledSound from '../public/sounds/oh-well.mp3'
+import useSound from 'use-sound'
 
 const diceReducer = (state, action) => {
 	switch (action.type) {
@@ -20,8 +27,8 @@ const diceReducer = (state, action) => {
 };
 
 export default function GameBoard() {
-	const WINNING_SCORE = 20;
 	const { playerOne, playerTwo, finalScore } = useContext(Context);
+
 	const leftDice = useRef();
 	const rightDice = useRef();
 
@@ -33,8 +40,8 @@ export default function GameBoard() {
 
 	const { leftDieValue, rightDieValue } = diceStates;
 
-	const [showHoldOrContinue, setShowHoldOrContinue] = useState(false);
 
+	const [showHoldOrContinue, setShowHoldOrContinue] = useState(false);
 	const [playerOneTotalScore, setPlayerOneTotalScore] = useState(0);
 	const [playerTwoTotalScore, setPlayerTwoTotalScore] = useState(0);
 	const [turnScore, setTurnScore] = useState(0);
@@ -46,6 +53,20 @@ export default function GameBoard() {
 	const [turnTextToShow, setTurnTextToShow] = useState(
 		'Click Roll Dice to Start Game'
 	);
+
+
+	const [playDiceRollSound] = useSound(diceRollSound);
+	const [playHoldSound] = useSound(holdSound);
+	const [playDoublesSound] = useSound(doublesSound)
+	const [playSnakeEyesSound] = useSound(snakeEyesSound)
+	const [playVictorySound] = useSound(victorySound, { volume: 0.50 })
+	const [playSingleOneRolledSound] = useSound(singleOneRolledSound)
+
+	useEffect(() => {
+		if (!winner) return
+		playVictorySound()
+	}, [winner])
+
 
 	const noOnesOrDoubles = () => {
 		return (
@@ -63,10 +84,14 @@ export default function GameBoard() {
 
 	const onesRolled = () => {
 		if (leftDieValue == 1 && rightDieValue == 1) {
+			playSnakeEyesSound()
 			activeUser === playerOne
 				? setPlayerOneTotalScore(0)
 				: setPlayerTwoTotalScore(0);
+		} else {
+			playSingleOneRolledSound()
 		}
+
 		setOneRolled(true);
 	};
 
@@ -97,6 +122,7 @@ export default function GameBoard() {
 			setTurnScore(prevScore => prevScore + leftDieValue + rightDieValue);
 			setShowHoldOrContinue(true);
 		} else if (checkForValidDoubles() == true) {
+			playDoublesSound()
 			setTurnScore(prevScore => prevScore + leftDieValue + rightDieValue);
 			setShowHoldOrContinue(false);
 		} else {
@@ -106,6 +132,7 @@ export default function GameBoard() {
 	};
 
 	const takeTurn = () => {
+		playDiceRollSound()
 		if (isFirstTurn) {
 			setIsFirstTurn(false);
 		}
@@ -120,7 +147,9 @@ export default function GameBoard() {
 		}
 	}, [rightDieValue]);
 
+
 	const holdFunc = () => {
+		playHoldSound()
 		setTurnTextToShow(
 			`${activeUser} Chose to Hold. ${notActiveUser}'s Turn!`
 		);
@@ -156,9 +185,9 @@ export default function GameBoard() {
 		setOneRolled(false);
 	};
 	return !winner ? (
-		<Paper elevation={3} className='w-1/2 min-1/2 h-3/5 p-10'>
+		<Paper elevation={3} className='w-1/2 min-1/2 h-auto p-10' sx={{ borderRadius: '1rem' }} >
 			<p className='py-5 px-10 text-6xl font-bold text-center font-funFont text-red-400'>
-				Dice Game
+				Dice Dash: Point Pursuit
 			</p>
 			<p className='text-center text-2xl px-10 py-3 '>{`${activeUser}'s Turn`}</p>
 			<p className='text-center pb-10'>{`${activeUser} Turn Score So Far is ${turnScore}`}</p>
@@ -173,7 +202,7 @@ export default function GameBoard() {
 							})
 						}
 						size='100'
-						rollingTime='500'
+						rollingTime='1000'
 						ref={leftDice}
 						disabled
 					/>
@@ -186,7 +215,7 @@ export default function GameBoard() {
 							})
 						}
 						size='100'
-						rollingTime='500'
+						rollingTime='1000'
 						disabled
 					/>
 				</div>

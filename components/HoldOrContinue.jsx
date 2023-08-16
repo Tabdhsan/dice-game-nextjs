@@ -1,3 +1,4 @@
+
 export default function HoldOrContinue({ holdFunc, continueFunc }) {
 	return (
 		<div className="space-x-4">
